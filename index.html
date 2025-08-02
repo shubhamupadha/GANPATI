@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Premium Site</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
+
+    body {
+      background-color: black;
+      color: white;
+    }
+
+    nav {
+      background: rgba(57, 55, 55, 0.6);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 999;
+    }
+
+    nav .logo-img {
+      height: 40px;
+      border-radius: 8px;
+    }
+
+    nav .nav-links {
+      display: flex;
+      gap: 15px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    nav a:hover {
+      color: gold;
+    }
+
+    .menu-icon {
+      display: none;
+      cursor: pointer;
+      font-size: 24px;
+      color: white;
+    }
+
+    header {
+      padding: 60px 30px;
+      max-width: 600px;
+    }
+
+    header h1 { font-size: 48px; margin-bottom: 10px; }
+    header h2 { font-size: 32px; margin-bottom: 10px; }
+    header h3 { font-size: 20px; }
+
+    .gallery, .videos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      padding: 30px;
+    }
+
+    .gallery img,
+    .videos video {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 12px;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+      cursor: pointer;
+    }
+
+    .gallery img:hover,
+    .videos video:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px 5px rgba(255, 255, 255, 0.5);
+    }
+
+    @media (max-width: 768px) {
+      nav .nav-links {
+        flex-direction: column;
+        width: 100%;
+        display: none;
+        margin-top: 10px;
+      }
+
+      nav .nav-links.active {
+        display: flex;
+      }
+
+      .menu-icon {
+        display: block;
+      }
+
+      header h1 { font-size: 32px; }
+      header h2 { font-size: 24px; }
+      header h3 { font-size: 16px; }
+    }
+
+    .footer {
+      background-color: #1d1f21;
+      color: white;
+      padding: 40px 20px;
+    }
+
+    .footer-container {
+      max-width: 1000px;
+      margin: auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .footer-left,
+    .footer-right {
+      flex: 1 1 300px;
+      margin: 10px;
+    }
+
+    .footer-left p,
+    .footer-right p,
+    .footer-right h3,
+    .footer-left a {
+      margin: 10px 0;
+      position: relative;
+      display: inline-block;
+      transition: 0.3s ease;
+      color: #ccc;
+      text-decoration: none;
+    }
+
+    .footer-left p:hover,
+    .footer-right p:hover,
+    .footer-left a:hover,
+    .footer-right h3:hover {
+      color: gold;
+      text-shadow: 0 2px 5px rgba(255, 255, 255, 0.5);
+    }
+
+    .footer-left p::after,
+    .footer-left a::after,
+    .footer-right h3::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -3px;
+      width: 0%;
+      height: 2px;
+      background-color: gold;
+      transition: width 0.3s ease;
+    }
+
+    .footer-left p:hover::after,
+    .footer-left a:hover::after,
+    .footer-right h3:hover::after {
+      width: 100%;
+    }
+
+    .social-icons {
+      margin-top: 10px;
+    }
+
+    .social-icons a {
+      margin-right: 10px;
+      text-decoration: none;
+      display: inline-block;
+      transition: 0.3s ease;
+    }
+
+    .social-icons img {
+      width: 25px;
+      height: 25px;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+
+    .social-icons img:hover {
+      transform: translateY(-4px) scale(1.1);
+      filter: drop-shadow(0 0 6px gold);
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      flex-direction: column;
+    }
+
+    .modal img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 10px;
+    }
+
+    .modal-controls {
+      margin-top: 10px;
+      display: flex;
+      gap: 20px;
+    }
+
+    .modal-controls button {
+      background: gold;
+      color: black;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav>
+    <img src="ganpati/ganpati1.png" alt="Logo" class="logo-img">
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#video">Videos</a>
+      <a href="#Contact">Contact</a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <header>
+    <h1>Welcome to Premium Site</h1>
+    <h2>Nalasopara East Ambawadi Tulinj Road Near By Divine Providence</h2>
+    <h3>Responsive Design, Smooth Effects, and Clean Look</h3>
+  </header>
+
+  <!-- Gallery -->
+  <section class="gallery" id="gallery">
+    <img src="ganpati/ganpati1.png" />
+    <img src="ganpati/ganpati2.jpg" />
+    <img src="ganpati/ganpati3.jpg" />
+    <img src="ganpati/ganpati4.jpg" />
+    <img src="ganpati/ganpati5.jpg" />
+    <img src="ganpati/ganpati6.jpg" />
+    <img src="ganpati/ganpati7.jpg" />
+
+    <img src="http://127.0.0.1:3000/ganpati/ganpati8.jpg" />
+    <img src="http://127.0.0.1:3000/ganpati/ganpati9.jpg" />
+    <img src="http://127.0.0.1:3000/ganpati/ganpati10.jpg" />
+    <img src="http://127.0.0.1:3000/ganpati/click1.jpg" />
+    <img src="http://127.0.0.1:3000/ganpati/click2.jpg" />
+    <img src="http://127.0.0.1:3000/ganpati/click4.jpg" />
+    <img src="http://127.0.0.1:3000/ganpati/click3.jpg" />
+    <img src="http://127.0.0.1:3000/ganpati/ganpati%20card.png" />
+  </section>
+
+  <!-- Videos -->
+  <section class="videos" id="video">
+    <video src="http://127.0.0.1:3000/ganpati/vid2.mp4" controls></video>
+    <video src="http://127.0.0.1:3000/ganpati/vid1.mp4" controls></video>
+    <video src="http://127.0.0.1:3000/ganpati/vid3.mp4" controls></video>
+    <video src="http://127.0.0.1:3000/ganpati/vid4.mp4" controls></video>
+    <video src="http://127.0.0.1:3000/ganpati/vid5.mp4" controls></video>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer" id="Contact">
+    <div class="footer-container">
+      <div class="footer-left">
+        <p>📍 Nalasopara East Ambawadi tulinj Road near by divine providence<br>Palghar, 401209</p>
+        <p>📞 +7208695872</p>
+        <p>✉️ <a href="mailto:support@company.com">support@company.com</a></p>
+      </div>
+      <div class="footer-right">
+        <h3>About the company</h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce euismod convallis velit.</p>
+        <div class="social-icons">
+          <a href="https://www.instagram.com/shubhamupadhayay12/"><img src="https://cdn-icons-png.flaticon.com/128/2111/2111463.png" alt="Instagram"></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/128/733/733547.png" alt="Facebook"></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/128/15707/15707820.png" alt="YouTube"></a>
+          <a href="#"><img src="https://cdn-icons-png.flaticon.com/128/18787/18787025.png" alt="Telegram"></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal for Image Slideshow -->
+  <div class="modal" id="modal">
+    <img id="modal-img">
+    <div class="modal-controls">
+      <button onclick="prevImage()">⟨ Prev</button>
+      <button onclick="nextImage()">Next ⟩</button>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    const modal = document.getElementById("modal");
+    const modalImg = document.getElementById("modal-img");
+    const galleryImages = Array.from(document.querySelectorAll(".gallery img"));
+    let currentIndex = 0;
+
+    galleryImages.forEach((img, index) => {
+      img.addEventListener("click", () => {
+        currentIndex = index;
+        showModalImage();
+      });
+    });
+
+    function showModalImage() {
+      modal.style.display = "flex";
+      modalImg.src = galleryImages[currentIndex].src;
+    }
+
+    function prevImage() {
+      currentIndex = (currentIndex - 1 + galleryImages.length) % galleryImages.length;
+      showModalImage();
+    }
+
+    function nextImage() {
+      currentIndex = (currentIndex + 1) % galleryImages.length;
+      showModalImage();
+    }
+
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal || e.target === modalImg) {
+        modal.style.display = "none";
+      }
+    });
+
+    function toggleMenu() {
+      document.querySelector('.nav-links').classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
+<abbr>
+  the nallasopara
+</abbr>
